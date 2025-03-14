@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agentic_core"
-version = "0.1.0"
+version = "0.0.1"
 description = "Command line tool framework that implements the 'ag' command and manages how it loads sub-tools"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Author Name", email = "author@example.com"}
+    {name = "Mingli Yuan", email = "mingli.yuan@gmail.com"}
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
