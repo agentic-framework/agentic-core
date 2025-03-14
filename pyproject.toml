@@ -19,8 +19,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/username/agentic-core"
-"Bug Tracker" = "https://github.com/username/agentic-core/issues"
+"Homepage" = "https://github.com/agentic-framework/agentic-core"
+"Bug Tracker" = "https://github.com/agentic-framework/agentic-core/issues"
 
 [project.scripts]
 ag = "agentic_core.cli:main"
