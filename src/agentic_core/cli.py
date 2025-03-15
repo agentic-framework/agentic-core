@@ -75,16 +75,6 @@ COMMAND_STRUCTURE = {
             }
         }
     },
-    "issues": {
-        "description": "GitHub issues management commands",
-        "subcommands": {
-            "list": {
-                "description": "List GitHub issues",
-                "module": "agentic_core.commands.issues_command",
-                "function": "issues_command"
-            }
-        }
-    },
     "env": {
         "description": "Environment management commands",
         "subcommands": {
@@ -333,12 +323,34 @@ def discover_plugins():
 
     # Find all entry points in the 'agentic.commands' group
     try:
-        for entry_point in importlib.metadata.entry_points(group='agentic.commands'):
+        print("Looking for entry points in the 'agentic.commands' group...")
+        
+        # Try to get entry points for the 'agentic.commands' group
+        try:
+            # For Python 3.10+
+            entry_points = importlib.metadata.entry_points(group='agentic.commands')
+            print(f"Found entry points using group parameter")
+        except TypeError:
+            # For older Python versions
+            all_entry_points = importlib.metadata.entry_points()
+            if hasattr(all_entry_points, 'select'):
+                # Python 3.9
+                entry_points = all_entry_points.select(group='agentic.commands')
+                print(f"Found entry points using select method")
+            else:
+                # Python 3.8 or earlier
+                entry_points = all_entry_points.get('agentic.commands', [])
+                print(f"Found entry points using get method")
+        
+        print(f"Found {len(list(entry_points))} entry points in the 'agentic.commands' group")
+        
+        for entry_point in entry_points:
             try:
                 # Load the command function
+                print(f"Loading command function for {entry_point.name}...")
                 command_func = entry_point.load()
                 commands[entry_point.name] = command_func
-                print(f"Discovered plugin command: {entry_point.name}")
+                print(f"Successfully loaded plugin command: {entry_point.name}")
             except Exception as e:
                 print(f"Error loading command {entry_point.name}: {e}", file=sys.stderr)
     except Exception as e:
