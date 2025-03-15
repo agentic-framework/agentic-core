@@ -25,6 +25,66 @@ from typing import Dict, List, Callable, Optional, Any
 
 # Define the command structure
 COMMAND_STRUCTURE = {
+    "dependency": {
+        "description": "Dependency management commands",
+        "subcommands": {
+            "check": {
+                "description": "Check if a dependency is installed and meets requirements",
+                "module": "agentic_core.commands.dependency_manager",
+                "function": "check_dependency_cli"
+            },
+            "install": {
+                "description": "Install a dependency",
+                "module": "agentic_core.commands.dependency_manager",
+                "function": "install_dependency_cli"
+            },
+            "update": {
+                "description": "Update a dependency to the recommended version",
+                "module": "agentic_core.commands.dependency_manager",
+                "function": "update_dependency_cli"
+            },
+            "list": {
+                "description": "List all dependencies and their status",
+                "module": "agentic_core.commands.dependency_manager",
+                "function": "list_dependencies_cli"
+            },
+            "fallback": {
+                "description": "Use a fallback implementation for a dependency",
+                "module": "agentic_core.commands.dependency_manager",
+                "function": "fallback_cli"
+            }
+        }
+    },
+    "discover": {
+        "description": "Discover and load the Agentic framework",
+        "subcommands": {
+            "info": {
+                "description": "Get information about the Agentic framework",
+                "module": "agentic_core.commands.discover_agentic",
+                "function": "discover_cli"
+            }
+        }
+    },
+    "error": {
+        "description": "Error handling commands",
+        "subcommands": {
+            "example": {
+                "description": "Run error handling examples",
+                "module": "agentic_core.commands.error_handler",
+                "function": "error_handler_cli"
+            }
+        }
+    },
+    "issues": {
+        "description": "GitHub issues management commands",
+        "subcommands": {
+            "list": {
+                "description": "List GitHub issues",
+                "module": "agentic_core.commands.issues_command",
+                "function": "issues_command"
+            }
+        }
+    },
     "env": {
         "description": "Environment management commands",
         "subcommands": {
@@ -95,28 +155,28 @@ COMMAND_STRUCTURE = {
         "subcommands": {
             "submit": {
                 "description": "Submit feedback",
-                "module": "agentic_core.commands.feedback_system",
-                "function": "submit_feedback"
+                "module": "agentic_core.commands.feedback_cli",
+                "function": "submit_issue_cli"
             },
             "list": {
                 "description": "List feedback items",
-                "module": "agentic_core.commands.feedback_system",
-                "function": "list_feedback"
+                "module": "agentic_core.commands.feedback_cli",
+                "function": "list_issues_cli"
             },
             "get": {
                 "description": "Get feedback details",
-                "module": "agentic_core.commands.feedback_system",
-                "function": "get_feedback"
+                "module": "agentic_core.commands.feedback_cli",
+                "function": "get_issue_cli"
             },
             "update": {
                 "description": "Update feedback status",
-                "module": "agentic_core.commands.feedback_system",
-                "function": "update_feedback"
+                "module": "agentic_core.commands.feedback_cli",
+                "function": "update_issue_cli"
             },
             "comment": {
                 "description": "Add a comment to feedback",
-                "module": "agentic_core.commands.feedback_system",
-                "function": "add_comment"
+                "module": "agentic_core.commands.feedback_cli",
+                "function": "comment_issue_cli"
             }
         }
     },
