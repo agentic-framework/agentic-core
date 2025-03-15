@@ -186,7 +186,7 @@ COMMAND_STRUCTURE = {
             "validate-command": {
                 "description": "Validate a command for execution",
                 "module": "agentic_core.commands.security",
-                "function": "validate_command"
+                "function": "validate_command_cli"
             },
             "scan-file": {
                 "description": "Scan a file for potential security violations",
@@ -211,7 +211,7 @@ COMMAND_STRUCTURE = {
             "check-orphaned-venvs": {
                 "description": "Check for orphaned virtual environments",
                 "module": "agentic_core.commands.cleanup_manager",
-                "function": "check_orphaned_venvs"
+                "function": "check_orphaned_venvs_cli"
             },
             "disk-usage": {
                 "description": "Analyze disk usage",
@@ -257,11 +257,6 @@ COMMAND_STRUCTURE = {
                 "description": "Initialize the virtual environment registry",
                 "module": "agentic_core.commands.setup",
                 "function": "initialize_registry"
-            },
-            "make-scripts-executable": {
-                "description": "Make utility scripts executable",
-                "module": "agentic_core.commands.setup",
-                "function": "make_scripts_executable"
             },
             "all": {
                 "description": "Run all setup steps",

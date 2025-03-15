@@ -2,7 +2,7 @@
 """
 Environment Checker
 
-This script checks if the current environment is set up correctly according to the agent rules.
+This module checks if the current environment is set up correctly according to the agent rules.
 It verifies the installation of uv, the directory structure, and the registry file.
 """
 
@@ -15,6 +15,9 @@ import time
 import logging
 from pathlib import Path
 from datetime import datetime
+
+# Import the config module from agentic_core
+from agentic_core.commands import config
 
 # Configure logging
 logging.basicConfig(
@@ -31,14 +34,14 @@ logger = logging.getLogger("check_environment")
 os.makedirs(os.path.expanduser("~/Agentic/logs"), exist_ok=True)
 
 # Base directories
-AGENTIC_DIR = os.path.expanduser("~/Agentic")
-TMP_DIR = os.path.join(AGENTIC_DIR, "tmp")
-PROJECTS_DIR = os.path.join(AGENTIC_DIR, "projects")
-SHARED_DIR = os.path.join(AGENTIC_DIR, "shared")
-LOGS_DIR = os.path.join(AGENTIC_DIR, "logs")
-CACHE_DIR = os.path.join(AGENTIC_DIR, "cache")
-BACKUP_DIR = os.path.join(AGENTIC_DIR, "backups")
-REGISTRY_PATH = os.path.join(AGENTIC_DIR, "venv_registry.json")
+AGENTIC_DIR = config.get_path("agentic_root") or os.path.expanduser("~/Agentic")
+TMP_DIR = config.get_path("tmp_dir") or os.path.join(AGENTIC_DIR, "tmp")
+PROJECTS_DIR = config.get_path("projects_dir") or os.path.join(AGENTIC_DIR, "projects")
+SHARED_DIR = config.get_path("shared_dir") or os.path.join(AGENTIC_DIR, "shared")
+LOGS_DIR = config.get_path("logs_dir") or os.path.join(AGENTIC_DIR, "logs")
+CACHE_DIR = config.get_path("cache_dir") or os.path.join(AGENTIC_DIR, "cache")
+BACKUP_DIR = config.get_path("backups_dir") or os.path.join(AGENTIC_DIR, "backups")
+REGISTRY_PATH = config.get_path("registry_file") or os.path.join(AGENTIC_DIR, "venv_registry.json")
 
 # Required directories
 REQUIRED_DIRS = [
@@ -49,15 +52,6 @@ REQUIRED_DIRS = [
     (LOGS_DIR, "Logs directory"),
     (CACHE_DIR, "Cache directory"),
     (BACKUP_DIR, "Backups directory")
-]
-
-# Required utility scripts
-UTILITY_SCRIPTS = [
-    "venv_manager.py",
-    "create_project.py",
-    "uv_manager.py",
-    "cleanup_manager.py",
-    "check_environment.py"
 ]
 
 def print_status(message, status, details=None):
@@ -241,22 +235,6 @@ def check_registry_file():
         print_status(f"Virtual environment registry: {REGISTRY_PATH}", False, f"Error reading registry file: {e}")
         logger.error(f"Error reading registry file: {e}")
         return False
-
-def check_utility_scripts():
-    """Check if the utility scripts exist and are executable."""
-    all_exist = True
-    
-    # Check if ag command is available
-    ag_path = shutil.which("ag")
-    if ag_path:
-        print_status(f"ag command: {ag_path}", True)
-        logger.info(f"ag command is available: {ag_path}")
-    else:
-        print_status("ag command", False, "ag command is not available in PATH")
-        logger.warning("ag command is not available in PATH")
-        all_exist = False
-    
-    return all_exist
 
 def check_python_installations():
     """Check Python installations managed by uv."""
@@ -474,13 +452,11 @@ def apply_environment_fixes():
     
     return fixes_applied
 
-def main():
-    """Main function to check the environment."""
+def run_environment_check(fix_mode=False):
+    """Run the environment check."""
     print("\n\033[1mAgentic Environment Check\033[0m\n")
     logger.info("Starting environment check")
     
-    # Check if --fix flag is provided
-    fix_mode = "--fix" in sys.argv
     if fix_mode:
         print("Running in fix mode. Will attempt to fix common issues.\n")
         logger.info("Running in fix mode")
@@ -505,15 +481,11 @@ def main():
     registry_ok = check_registry_file()
     print()
     
-    print("\033[1m4. Utility Scripts\033[0m")
-    scripts_ok = check_utility_scripts()
-    print()
-    
-    print("\033[1m5. Python Installations\033[0m")
+    print("\033[1m4. Python Installations\033[0m")
     python_ok = check_python_installations()
     print()
     
-    print("\033[1m6. Virtual Environments\033[0m")
+    print("\033[1m5. Virtual Environments\033[0m")
     venvs_ok = check_virtual_environments()
     print()
     
@@ -523,11 +495,12 @@ def main():
     
     # Summary
     print("\033[1mSummary\033[0m")
-    all_ok = uv_ok and dirs_ok and registry_ok and scripts_ok and python_ok and venvs_ok
+    all_ok = uv_ok and dirs_ok and registry_ok and python_ok and venvs_ok
     
     if all_ok:
         print("\033[92mEnvironment is set up correctly according to the agent rules.\033[0m")
         logger.info("Environment check passed")
+        return 0
     else:
         print("\033[91mEnvironment has issues that need to be addressed.\033[0m")
         logger.warning("Environment check failed")
@@ -541,9 +514,6 @@ def main():
         if not registry_ok:
             print("- Create or fix the registry file")
         
-        if not scripts_ok:
-            print("- Ensure the ag command is available in PATH")
-        
         if not python_ok:
             print("- Install Python using 'ag uv install-python'")
         
@@ -551,16 +521,17 @@ def main():
             print("- Clean up invalid virtual environments using 'ag venv cleanup'")
         
         print("\nRun with --fix flag to attempt automatic fixes: ag env fix")
+        return 1
 
 def check_environment(args):
     """Function to check the environment setup, called by the ag script."""
-    # args parameter is not used but required by the ag script interface
-    return main()
+    return run_environment_check(False)
 
 def fix_environment(args):
     """Function to fix common environment issues, called by the ag script."""
-    sys.argv.append("--fix")
-    return main()
+    return run_environment_check(True)
 
 if __name__ == "__main__":
-    main()
+    # Check if --fix flag is provided
+    fix_mode = "--fix" in sys.argv
+    sys.exit(run_environment_check(fix_mode))
