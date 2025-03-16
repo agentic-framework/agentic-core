@@ -373,7 +373,7 @@ class AgenticCLI:
         self.original_argv = sys.argv.copy()
 
         # Set up module paths
-        self.agentic_root = os.path.expanduser("~/Agentic")
+        self.agentic_root = os.environ.get("AGHOME", os.path.expanduser("~/Agentic"))
         self.agentic_dir = os.path.join(self.agentic_root, "agentic")
 
     def run(self):

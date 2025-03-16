@@ -14,19 +14,22 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional, Any
 
+# Get the Agentic home directory from the environment variable or use the default
+AGENTIC_HOME = os.environ.get("AGHOME", os.path.expanduser("~/Agentic"))
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(os.path.expanduser("~/Agentic/logs/discover_agentic.log"), mode='a')
+        logging.FileHandler(os.path.join(AGENTIC_HOME, "logs", "discover_agentic.log"), mode='a')
     ]
 )
 logger = logging.getLogger("discover_agentic")
 
 # Create logs directory if it doesn't exist
-os.makedirs(os.path.expanduser("~/Agentic/logs"), exist_ok=True)
+os.makedirs(os.path.join(AGENTIC_HOME, "logs"), exist_ok=True)
 
 def find_agentic_root() -> Optional[str]:
     """
@@ -35,7 +38,13 @@ def find_agentic_root() -> Optional[str]:
     Returns:
         Optional[str]: The path to the Agentic framework root directory, or None if not found
     """
-    # First, try the standard location
+    # First, check if AGHOME environment variable is set
+    if "AGHOME" in os.environ:
+        aghome = os.environ["AGHOME"]
+        if os.path.exists(aghome) and os.path.isdir(aghome):
+            return aghome
+    
+    # Next, try the standard location
     standard_path = os.path.expanduser("~/Agentic")
     if os.path.exists(standard_path) and os.path.isdir(standard_path):
         return standard_path

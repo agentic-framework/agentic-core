@@ -14,34 +14,37 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+# Get the Agentic home directory from the environment variable or use the default
+AGENTIC_HOME = os.environ.get("AGHOME", os.path.expanduser("~/Agentic"))
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(os.path.expanduser("~/Agentic/logs/config.log"), mode='a')
+        logging.FileHandler(os.path.join(AGENTIC_HOME, "logs", "config.log"), mode='a')
     ]
 )
 logger = logging.getLogger("config")
 
 # Create logs directory if it doesn't exist
-os.makedirs(os.path.expanduser("~/Agentic/logs"), exist_ok=True)
+os.makedirs(os.path.join(AGENTIC_HOME, "logs"), exist_ok=True)
 
 # Default configuration values
 DEFAULT_CONFIG = {
     "version": "1.0.0",
     "paths": {
-        "agentic_root": "~/Agentic",
-        "agentic_repo": "~/Agentic/agentic",
-        "projects_dir": "~/Agentic/projects",
-        "shared_dir": "~/Agentic/shared",
-        "tmp_dir": "~/Agentic/tmp",
-        "logs_dir": "~/Agentic/logs",
-        "cache_dir": "~/Agentic/cache",
-        "backups_dir": "~/Agentic/backups",
-        "registry_file": "~/Agentic/venv_registry.json",
-        "rules_file": "~/Agentic/agentic/rules.json"
+        "agentic_root": AGENTIC_HOME,
+        "agentic_repo": os.path.join(AGENTIC_HOME, "agentic"),
+        "projects_dir": os.path.join(AGENTIC_HOME, "projects"),
+        "shared_dir": os.path.join(AGENTIC_HOME, "shared"),
+        "tmp_dir": os.path.join(AGENTIC_HOME, "tmp"),
+        "logs_dir": os.path.join(AGENTIC_HOME, "logs"),
+        "cache_dir": os.path.join(AGENTIC_HOME, "cache"),
+        "backups_dir": os.path.join(AGENTIC_HOME, "backups"),
+        "registry_file": os.path.join(AGENTIC_HOME, "venv_registry.json"),
+        "rules_file": os.path.join(AGENTIC_HOME, "agentic", "rules.json")
     },
     "python": {
         "package_manager": "uv",
@@ -69,7 +72,7 @@ DEFAULT_CONFIG = {
     },
     "security": {
         "allowed_areas": [
-            "~/Agentic"
+            AGENTIC_HOME
         ],
         "restricted_areas": [
             "System files",
@@ -90,7 +93,7 @@ DEFAULT_CONFIG = {
 }
 
 # Path to the configuration file
-CONFIG_PATH = os.path.expanduser("~/Agentic/agentic_config.json")
+CONFIG_PATH = os.path.join(AGENTIC_HOME, "agentic_config.json")
 
 class Config:
     """Class for managing the Agentic framework configuration."""
