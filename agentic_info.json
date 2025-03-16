@@ -1,0 +1,48 @@
+{
+  "framework_name": "Agentic",
+  "version": "0.1.0",
+  "description": "A framework for managing and operating AI agents with controlled access to a machine",
+  "home_directory": "$HOME/Agentic",
+  "documentation": {
+    "agent_rules": "$HOME/Agentic/agentic/AGENT_RULES.md",
+    "agent_quick_reference": "$HOME/Agentic/agentic/AGENT_QUICK_REFERENCE.md",
+    "human_guide": "$HOME/Agentic/agentic/HUMAN_GUIDE.md",
+    "readme": "$HOME/Agentic/agentic/README.md"
+  },
+  "directory_structure": {
+    "agentic": "$HOME/Agentic/agentic",
+    "projects": "$HOME/Agentic/projects",
+    "shared": "$HOME/Agentic/shared",
+    "tmp": "$HOME/Agentic/tmp",
+    "logs": "$HOME/Agentic/logs",
+    "cache": "$HOME/Agentic/cache",
+    "backups": "$HOME/Agentic/backups"
+  },
+  "utility_commands": {
+    "env": {
+      "script": "$HOME/Agentic/agentic/check_environment.py",
+      "usage": "./ag env check [--fix]"
+    },
+    "venv": {
+      "script": "$HOME/Agentic/agentic/venv_manager.py",
+      "usage": "./ag venv [subcommand] [args]"
+    },
+    "uv": {
+      "script": "$HOME/Agentic/agentic/uv_manager.py",
+      "usage": "./ag uv [subcommand] [args]"
+    },
+    "project": {
+      "script": "$HOME/Agentic/agentic/create_project.py",
+      "usage": "./ag project create [name] [options]"
+    },
+    "cleanup": {
+      "script": "$HOME/Agentic/agentic/cleanup_manager.py",
+      "usage": "./ag cleanup [subcommand] [args]"
+    }
+  },
+  "registry": {
+    "path": "$HOME/Agentic/venv_registry.json",
+    "description": "Registry of active Python virtual environments managed by uv"
+  },
+  "recommended_entry_prompt": "Read the Agentic framework located at $HOME/Agentic to load your rules and tools. Start by examining the README.md and AGENT_RULES.md files in the agentic subdirectory."
+}
