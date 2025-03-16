@@ -14,9 +14,6 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional, Any
 
-# Import the config module from agentic_core
-from agentic_core.commands import config
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -72,9 +69,21 @@ def load_agentic_info(agentic_root: str, json_output: bool = False) -> Optional[
     Returns:
         Optional[Dict[str, Any]]: The Agentic framework information, or None if not found
     """
-    info_path = os.path.join(agentic_root, "agentic_info.json")
+    # First, try to find the file in the agentic-core repository
+    agentic_core_path = os.path.join(agentic_root, "projects", "agentic-core", "agentic_info.json")
     
-    if os.path.exists(info_path):
+    # If not found in agentic-core, try the current directory (for backward compatibility)
+    current_dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "agentic_info.json")
+    
+    # Check if the file exists in either location
+    if os.path.exists(agentic_core_path):
+        info_path = agentic_core_path
+    elif os.path.exists(current_dir_path):
+        info_path = current_dir_path
+    else:
+        info_path = None
+    
+    if info_path and os.path.exists(info_path):
         try:
             with open(info_path, 'r') as f:
                 info = json.load(f)
@@ -100,7 +109,7 @@ def load_agentic_info(agentic_root: str, json_output: bool = False) -> Optional[
         # Create a basic info structure
         return {
             "framework_name": "Agentic",
-            "version": config.get("version", "Unknown"),
+            "version": "1.0.0",  # Default version
             "description": "A framework for managing and operating AI agents with controlled access to a machine",
             "home_directory": agentic_root,
             "documentation": {
