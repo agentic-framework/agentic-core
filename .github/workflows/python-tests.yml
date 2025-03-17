@@ -34,6 +34,14 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --extend-ignore=F821
         # exit-zero treats all errors as warnings
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Setup environment
+      run: |
+        mkdir -p /home/runner/Agentic/logs
+        mkdir -p /home/runner/Agentic/cache
+        mkdir -p /home/runner/Agentic/tmp
+        mkdir -p /home/runner/Agentic/backups
+        mkdir -p /home/runner/Agentic/shared
+        mkdir -p /home/runner/Agentic/projects
     - name: Test with pytest
       run: |
         source .venv/bin/activate
