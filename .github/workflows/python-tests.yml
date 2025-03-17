@@ -25,7 +25,8 @@ jobs:
         pip install uv
         uv venv .venv
         source .venv/bin/activate
-        uv pip install -e ".[dev,test]"
+        uv pip install -e .
+        uv pip install pytest pytest-cov flake8
     - name: Lint with flake8
       run: |
         source .venv/bin/activate
